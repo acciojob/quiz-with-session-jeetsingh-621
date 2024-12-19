@@ -30,27 +30,65 @@ const questions = [
   },
 ];
 
+  const questionsContainer = document.getElementById('questions');
+        const submitButton = document.getElementById('submit');
+        const scoreDisplay = document.getElementById('score');
+
+  const userAnswers = JSON.parse(sessionStorage.getItem('progress')) || {};
+
 // Display the quiz questions and choices
-function renderQuestions() {
-  for (let i = 0; i < questions.length; i++) {
-    const question = questions[i];
-    const questionElement = document.createElement("div");
-    const questionText = document.createTextNode(question.question);
-    questionElement.appendChild(questionText);
-    for (let j = 0; j < question.choices.length; j++) {
-      const choice = question.choices[j];
-      const choiceElement = document.createElement("input");
-      choiceElement.setAttribute("type", "radio");
-      choiceElement.setAttribute("name", `question-${i}`);
-      choiceElement.setAttribute("value", choice);
-      if (userAnswers[i] === choice) {
-        choiceElement.setAttribute("checked", true);
-      }
-      const choiceText = document.createTextNode(choice);
-      questionElement.appendChild(choiceElement);
-      questionElement.appendChild(choiceText);
-    }
-    questionsElement.appendChild(questionElement);
-  }
-}
+   function renderQuestions() {
+            questions.forEach((q, i) => {
+                const questionElement = document.createElement("div");
+                questionElement.className = "question";
+
+                const questionText = document.createElement("p");
+                questionText.textContent = `${i + 1}. ${q.question}`;
+                questionElement.appendChild(questionText);
+
+                const optionsContainer = document.createElement("div");
+                optionsContainer.className = "options";
+
+                q.choices.forEach((choice) => {
+                    const choiceElement = document.createElement("input");
+                    choiceElement.type = "radio";
+                    choiceElement.name = `question-${i}`;
+                    choiceElement.value = choice;
+                    if (userAnswers[i] === choice) {
+                        choiceElement.checked = true;
+                    }
+
+                    choiceElement.addEventListener("change", () => {
+                        userAnswers[i] = choice;
+                        sessionStorage.setItem("progress", JSON.stringify(userAnswers));
+                    });
+
+                    const label = document.createElement("label");
+                    label.textContent = choice;
+
+                    optionsContainer.appendChild(choiceElement);
+                    optionsContainer.appendChild(label);
+                    optionsContainer.appendChild(document.createElement("br"));
+                });
+
+                questionElement.appendChild(optionsContainer);
+                questionsContainer.appendChild(questionElement);
+            });
+        }
+
+  submitButton.addEventListener("click", () => {
+            let score = 0;
+
+            questions.forEach((q, i) => {
+                if (userAnswers[i] === q.answer) {
+                    score++;
+                }
+            });
+
+            scoreDisplay.style.display = "block";
+            scoreDisplay.textContent = `Your score is ${score} out of ${questions.length}.`;
+
+            // Save score to local storage
+            localStorage.setItem("score", score);
+        });
 renderQuestions();
