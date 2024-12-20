@@ -40,9 +40,9 @@ const questions = [
    function renderQuestions() {
             questions.forEach((q, i) => {
                 const questionElement = document.createElement("div");
-                questionElement.className = "question";
+                questionElement.id = "question";
 
-                const questionText = document.createElement("p");
+                const questionText = document.createElement("div");
                 questionText.textContent = `${i + 1}. ${q.question}`;
                 questionElement.appendChild(questionText);
 
