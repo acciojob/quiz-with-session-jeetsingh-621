@@ -43,7 +43,7 @@ const questions = [
                 questionElement.className = "question";
 
                 const questionText = document.createElement("div");
-                questionText.textContent = `${i + 1}. ${q.question}`;
+                questionText.textContent = ` ${q.question}`;
                 questionElement.appendChild(questionText);
 
                 const optionsContainer = document.createElement("div");
